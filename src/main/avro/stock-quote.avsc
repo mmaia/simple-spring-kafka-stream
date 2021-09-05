@@ -1,0 +1,9 @@
+{
+ "namespace": "com.resona.springkafkastream.repository",
+ "type": "record",
+ "name": "StockQuote",
+ "fields": [
+   { "name": "symbol", "type": "string"},
+   { "name": "tradeValue", "type": "double"}
+ ]
+}
