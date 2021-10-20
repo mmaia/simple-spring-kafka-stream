@@ -9,9 +9,8 @@ import org.springframework.stereotype.Repository;
 public class StockQuoteProducer {
 
     private final KafkaTemplate<String, StockQuote> quoteProducer;
-    private final static String TOPIC = "stock-quotes";
 
     public void send(StockQuote message) {
-        quoteProducer.send(TOPIC, message.getSymbol().toString(), message);
+        quoteProducer.send(KafkaConfiguration.QUOTES_TOPIC, message.getSymbol().toString(), message);
     }
 }

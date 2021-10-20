@@ -15,6 +15,7 @@ import org.springframework.kafka.annotation.KafkaStreamsDefaultConfiguration;
 import org.springframework.kafka.config.KafkaStreamsConfiguration;
 import org.springframework.kafka.config.StreamsBuilderFactoryBeanConfigurer;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,20 +37,22 @@ public class KafkaConfiguration {
 
     @Bean
     public StreamsBuilderFactoryBeanConfigurer configurer() {
-        return fb -> fb.setStateListener((newState, oldState) -> {
-            log.info("State transition from " + oldState + " to " + newState);
-        });
+        return fb -> fb.setStateListener((newState, oldState) -> log.info("State transition from " + oldState + " to " + newState));
     }
 
     public Map<String, Object> defaultStreamsConfigs() {
         Map<String, Object> props = new HashMap<>();
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(StreamsConfig.DEFAULT_DESERIALIZATION_EXCEPTION_HANDLER_CLASS_CONFIG, LogAndContinueExceptionHandler.class);
-        props.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://schema-registry:8081");
+        props.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, SCHEMA_REGISTRY_URL);
         return props;
     }
 
 
     public final static String QUOTES_TOPIC = "stock-quotes";
     public final static String LEVERAGE_PRICE_TOPIC = "leverage-prices";
+    public static final String SCHEMA_REGISTRY_URL = "http://schema-registry:8081";
+    public static final Map<String, String> SERDE_CONFIG =
+            Collections.singletonMap(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG,
+                    SCHEMA_REGISTRY_URL);
 }

@@ -1,7 +1,13 @@
 POST http://localhost:8080/api/quotes
 Content-Type: application/json
 
-< ./test-data/stockQuote3.json
+< ./test-data/stockQuote1.json
+
+###
+POST http://localhost:8080/api/leverage
+Content-Type: application/json
+
+< ./test-data/leveragePrice2.json
 
 ###
 GET http://localhost:8080/actuator/health

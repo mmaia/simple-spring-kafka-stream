@@ -1,0 +1,10 @@
+{
+  "namespace": "com.resona.springkafkastream.repository",
+  "type": "record",
+  "name": "ProcessedQuote",
+  "fields": [
+    { "name": "symbol", "type": "string"},
+    { "name": "tradeValue", "type": "double"},
+    { "name": "leveragePrice", "type": ["null", "double"], "default":  null}
+  ]
+}
