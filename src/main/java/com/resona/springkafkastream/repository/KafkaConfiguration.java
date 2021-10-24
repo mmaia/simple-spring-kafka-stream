@@ -13,6 +13,7 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.EnableKafkaStreams;
 import org.springframework.kafka.annotation.KafkaStreamsDefaultConfiguration;
 import org.springframework.kafka.config.KafkaStreamsConfiguration;
+import org.springframework.kafka.config.StreamsBuilderFactoryBean;
 import org.springframework.kafka.config.StreamsBuilderFactoryBeanConfigurer;
 
 import java.util.Collections;
@@ -26,13 +27,18 @@ import java.util.Map;
 public class KafkaConfiguration {
 
     @Bean(name = KafkaStreamsDefaultConfiguration.DEFAULT_STREAMS_CONFIG_BEAN_NAME)
-    public KafkaStreamsConfiguration quoteStreamsConfigs() {
+    public KafkaStreamsConfiguration defaultKafkaStreamsConfig() {
         Map<String, Object> props = defaultStreamsConfigs();
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "quote-stream");
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, SpecificAvroSerde.class);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "stock-quotes-stream-group");
         return new KafkaStreamsConfiguration(props);
+    }
+
+    @Bean(name = KafkaStreamsDefaultConfiguration.DEFAULT_STREAMS_BUILDER_BEAN_NAME)
+    public StreamsBuilderFactoryBean defaultKafkaStreamsBuilder(KafkaStreamsConfiguration defaultKafkaStreamsConfig) {
+        return new StreamsBuilderFactoryBean(defaultKafkaStreamsConfig);
     }
 
     @Bean
