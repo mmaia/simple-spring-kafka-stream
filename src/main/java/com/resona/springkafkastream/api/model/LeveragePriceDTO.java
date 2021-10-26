@@ -1,4 +1,4 @@
-package com.resona.springkafkastream.model;
+package com.resona.springkafkastream.api.model;
 
 import lombok.Data;
 
