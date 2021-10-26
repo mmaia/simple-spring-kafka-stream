@@ -1,18 +1,15 @@
 package com.resona.springkafkastream.api;
 
-import com.resona.springkafkastream.model.LeveragePriceDTO;
-import com.resona.springkafkastream.model.StockQuoteDTO;
-import com.resona.springkafkastream.repository.LeveragePrice;
-import com.resona.springkafkastream.repository.LeveragePriceProducer;
-import com.resona.springkafkastream.repository.StockQuote;
-import com.resona.springkafkastream.repository.StockQuoteProducer;
+import com.resona.springkafkastream.api.model.LeveragePriceDTO;
+import com.resona.springkafkastream.api.model.StockQuoteDTO;
+import com.resona.springkafkastream.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -22,6 +19,18 @@ public class QuotesController {
 
     private final StockQuoteProducer stockQuoteProducer;
     private final LeveragePriceProducer leveragePriceProducer;
+    private final QuotesStream quotesStream;
+
+    @GetMapping("leveragePrice/{instrumentSymbol}")
+    public ResponseEntity<LeveragePriceDTO> getLeveragePrice(@PathVariable String instrumentSymbol) {
+        LeveragePrice leveragePrice = quotesStream.getLeveragePrice(instrumentSymbol);
+        // if quote doesn't exist in our local store we return no content.
+        if(leveragePrice == null) return ResponseEntity.noContent().build();
+        LeveragePriceDTO result = new LeveragePriceDTO();
+        result.setSymbol(leveragePrice.getSymbol().toString());
+        result.setLeveragePrice(BigDecimal.valueOf(leveragePrice.getLeveragePrice()));
+        return ResponseEntity.ok(result);
+    }
 
     @PostMapping("/quotes")
     public ResponseEntity<StockQuoteDTO> newQuote(@RequestBody StockQuoteDTO stockQuoteDTO) {
