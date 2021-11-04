@@ -8,9 +8,7 @@ import org.apache.kafka.common.utils.Bytes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
-import org.apache.kafka.streams.kstream.GlobalKTable;
-import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.Materialized;
+import org.apache.kafka.streams.kstream.*;
 import org.apache.kafka.streams.state.KeyValueStore;
 import org.apache.kafka.streams.state.QueryableStoreTypes;
 import org.apache.kafka.streams.state.ReadOnlyKeyValueStore;
@@ -20,6 +18,7 @@ import org.springframework.kafka.support.KafkaStreamBrancher;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
+import java.time.Duration;
 import java.util.function.BiFunction;
 
 @Repository
@@ -87,6 +86,17 @@ public class QuotesStream {
                 .branch((symbolKey, processedQuote) -> symbolKey.equalsIgnoreCase("GOOGL"), ks -> ks.to(KafkaConfiguration.GOOGL_STOCKS_TOPIC))
                 .defaultBranch(ks -> ks.to(KafkaConfiguration.ALL_OTHER_STOCKS_TOPIC))
                 .onTopOf(inStream);
+
+        // count quotes by symbol
+//        final KTable<String, Long> quotesCount = inStream.groupBy((symbolKey, processedQuote) -> symbolKey).count();
+        final KTable<String, Long> quotesCount = inStream.groupByKey().count();
+        quotesCount.toStream().to(KafkaConfiguration.COUNT_QUOTES_BY_SYMBOL_TOPIC, Produced.with(Serdes.String(), Serdes.Long()));
+
+        final KTable<Windowed<String>, Long> quotesWindowed = inStream.groupByKey().windowedBy(SessionWindows.with(Duration.ofSeconds(30))).count();
+        quotesWindowed.toStream()
+                .map((key, value) -> new KeyValue<>(key.key() + "@" + key.window().start() + " -> " + key.window().end(), value))
+                .to(KafkaConfiguration.COUNT_QUOTES_BY_SYMBOL_WINDOW_TOPIC, Produced.with(Serdes.String(), Serdes.Long()));
+
 
         return inStream;
     }
