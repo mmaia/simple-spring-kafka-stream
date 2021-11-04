@@ -28,7 +28,9 @@ public class QuotesStream {
     public static final String LEVERAGE_BY_SYMBOL_TABLE = "leverage-by-symbol-ktable";
     SpecificAvroSerde<LeveragePrice> leveragePriceSerde = new SpecificAvroSerde<>();
     private ReadOnlyKeyValueStore<String, LeveragePrice> leveragePriceView;
+    SpecificAvroSerde<QuotesPerWindow> quotesPerWindowSerde = new SpecificAvroSerde<>();
 
+    // From quote to processed quote
     BiFunction<String, StockQuote, KeyValue<String, ProcessedQuote>> quoteMapper = (symbol, stockQuote) -> {
         final ProcessedQuote processedQuote = ProcessedQuote.newBuilder()
                 .setSymbol(symbol)
@@ -37,9 +39,21 @@ public class QuotesStream {
         return new KeyValue<>(symbol, processedQuote);
     };
 
+    // From processed quote to quotes per window
+    BiFunction<Windowed<String>, Long, KeyValue<String, QuotesPerWindow>> processedQuoteToQuotesPerWindowMapper = (key, value) -> {
+        final QuotesPerWindow quotesPerWindow = QuotesPerWindow.newBuilder()
+                .setSymbol(key.key())
+                .setStartTime(key.window().start())
+                .setEndTime(key.window().end())
+                .setCount(value != null ? value : 0)
+                .build();
+        return new KeyValue<>(key.key(), quotesPerWindow);
+    };
+
     @PostConstruct
     public void init() {
         leveragePriceSerde.configure(KafkaConfiguration.SERDE_CONFIG, false);
+        quotesPerWindowSerde.configure(KafkaConfiguration.SERDE_CONFIG, false);
     }
 
     @Bean
@@ -87,16 +101,23 @@ public class QuotesStream {
                 .defaultBranch(ks -> ks.to(KafkaConfiguration.ALL_OTHER_STOCKS_TOPIC))
                 .onTopOf(inStream);
 
+
         // count quotes by symbol
 //        final KTable<String, Long> quotesCount = inStream.groupBy((symbolKey, processedQuote) -> symbolKey).count();
+        // to read from the topic produced with the totals:
+//         $ bin/kafka-console-consumer --topic count-total-by-symbol-topic --from-beginning \
+//                              --bootstrap-server localhost:29092 \
+//                               --property print.key=true \
+//                               --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer
         final KTable<String, Long> quotesCount = inStream.groupByKey().count();
-        quotesCount.toStream().to(KafkaConfiguration.COUNT_QUOTES_BY_SYMBOL_TOPIC, Produced.with(Serdes.String(), Serdes.Long()));
+        quotesCount.toStream().to(KafkaConfiguration.COUNT_TOTAL_QUOTES_BY_SYMBOL_TOPIC, Produced.with(Serdes.String(), Serdes.Long()));
 
+        // group counts per stock per interval
         final KTable<Windowed<String>, Long> quotesWindowed = inStream.groupByKey().windowedBy(SessionWindows.with(Duration.ofSeconds(30))).count();
-        quotesWindowed.toStream()
-                .map((key, value) -> new KeyValue<>(key.key() + "@" + key.window().start() + " -> " + key.window().end(), value))
-                .to(KafkaConfiguration.COUNT_QUOTES_BY_SYMBOL_WINDOW_TOPIC, Produced.with(Serdes.String(), Serdes.Long()));
-
+        quotesWindowed
+                .toStream()
+                .map(processedQuoteToQuotesPerWindowMapper::apply)
+                .to(KafkaConfiguration.COUNT_WINDOW_QUOTES_BY_SYMBOL_TOPIC, Produced.with(Serdes.String(), quotesPerWindowSerde));
 
         return inStream;
     }

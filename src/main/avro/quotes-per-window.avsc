@@ -1,0 +1,11 @@
+{
+  "namespace": "com.resona.springkafkastream.repository",
+  "type": "record",
+  "name": "QuotesPerWindow",
+  "fields": [
+    { "name": "symbol", "type": "string"},
+    { "name": "startTime", "type": "long"},
+    { "name": "endTime", "type":  "long"},
+    { "name": "count", "type":  "long"}
+  ]
+}

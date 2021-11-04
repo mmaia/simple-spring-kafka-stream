@@ -18,4 +18,3 @@ GET http://localhost:8080/api/leveragePrice/GOOGL
 ###
 GET http://localhost:8080/actuator/health
 
-

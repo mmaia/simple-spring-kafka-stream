@@ -43,8 +43,8 @@ public class KafkaConfiguration {
                 TopicBuilder.name(APPL_STOCKS_TOPIC).build(),
                 TopicBuilder.name(GOOGL_STOCKS_TOPIC).build(),
                 TopicBuilder.name(ALL_OTHER_STOCKS_TOPIC).build(),
-                TopicBuilder.name(COUNT_QUOTES_BY_SYMBOL_TOPIC).compact().build(),
-                TopicBuilder.name(COUNT_QUOTES_BY_SYMBOL_WINDOW_TOPIC).compact().build()
+                TopicBuilder.name(COUNT_TOTAL_QUOTES_BY_SYMBOL_TOPIC).compact().build(),
+                TopicBuilder.name(COUNT_WINDOW_QUOTES_BY_SYMBOL_TOPIC).build()
         );
     }
 
@@ -77,8 +77,8 @@ public class KafkaConfiguration {
     public final static String APPL_STOCKS_TOPIC = "appl-stocks-topic";
     public final static String GOOGL_STOCKS_TOPIC = "googl-stocks-topic";
     public final static String ALL_OTHER_STOCKS_TOPIC = "all-other-stocks-topic";
-    public final static String COUNT_QUOTES_BY_SYMBOL_TOPIC = "count-by-symbol-topic";
-    public final static String COUNT_QUOTES_BY_SYMBOL_WINDOW_TOPIC = "count-by-symbol-window-topic";
+    public final static String COUNT_TOTAL_QUOTES_BY_SYMBOL_TOPIC = "count-total-by-symbol-topic";
+    public final static String COUNT_WINDOW_QUOTES_BY_SYMBOL_TOPIC = "count-window-by-symbol-topic";
 
     public static final String KAFKA_HOST_ADDR = "localhost:9092";
     public static final String SCHEMA_REGISTRY_URL = "http://schema-registry:8081";

@@ -8,4 +8,5 @@ import java.math.BigDecimal;
 public class StockQuoteDTO {
     private String symbol;
     private BigDecimal tradeValue;
+    private String isoDateTime;
 }

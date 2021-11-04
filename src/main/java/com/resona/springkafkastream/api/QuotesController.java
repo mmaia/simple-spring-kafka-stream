@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.OffsetDateTime;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -39,6 +41,9 @@ public class QuotesController {
                 .setSymbol(stockQuoteDTO.getSymbol())
                 .setTradeValue(stockQuoteDTO.getTradeValue().doubleValue())
                 .build();
+        if(stockQuoteDTO.getIsoDateTime() != null) {
+            stockQuote.setTradeTime(String.valueOf(OffsetDateTime.parse(stockQuoteDTO.getIsoDateTime()).toInstant().toEpochMilli()));
+        }
         stockQuoteProducer.send(stockQuote);
         return ResponseEntity.ok(stockQuoteDTO);
     }
