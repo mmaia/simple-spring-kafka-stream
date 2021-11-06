@@ -1,6 +1,5 @@
 package com.resona.springkafkastream.api;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.resona.springkafkastream.api.model.LeveragePriceDTO;
 import com.resona.springkafkastream.api.model.QuotesPerWindowDTO;
 import com.resona.springkafkastream.api.model.StockQuoteDTO;
@@ -11,10 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.ws.rs.PathParam;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.OffsetDateTime;
 import java.util.Optional;
 
 @RequiredArgsConstructor
