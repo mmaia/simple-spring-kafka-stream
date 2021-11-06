@@ -1,6 +1,8 @@
 package com.resona.springkafkastream.api;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.resona.springkafkastream.api.model.LeveragePriceDTO;
+import com.resona.springkafkastream.api.model.QuotesPerWindowDTO;
 import com.resona.springkafkastream.api.model.StockQuoteDTO;
 import com.resona.springkafkastream.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -9,9 +11,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.ws.rs.PathParam;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -42,10 +46,34 @@ public class QuotesController {
                 .setTradeValue(stockQuoteDTO.getTradeValue().doubleValue())
                 .build();
         if(stockQuoteDTO.getIsoDateTime() != null) {
-            stockQuote.setTradeTime(String.valueOf(OffsetDateTime.parse(stockQuoteDTO.getIsoDateTime()).toInstant().toEpochMilli()));
+            stockQuote.setTradeTime(stockQuoteDTO.getIsoDateTime().toEpochMilli());
         }
         stockQuoteProducer.send(stockQuote);
         return ResponseEntity.ok(stockQuoteDTO);
+    }
+
+    @GetMapping("/quotes/count/{symbol}")
+    public ResponseEntity<QuotesPerWindowDTO> getQuotesPerWindow(@PathVariable String symbol,
+                                                                 @RequestParam("pastMinutes") Integer pastMinutes) {
+
+        Instant end = Instant.now();
+        Instant start = end.minusSeconds(pastMinutes * 60);
+
+        Optional<QuotesPerWindow> quotesPerWindow = quotesStream.allCountedQuotesForInterval(symbol, start.toEpochMilli(), end.toEpochMilli());
+
+        if(quotesPerWindow.isPresent()) {
+            QuotesPerWindow res = quotesPerWindow.get();
+            return ResponseEntity.ok(
+                    QuotesPerWindowDTO.builder()
+                            .symbol(symbol)
+                            .count(res.getCount())
+                            .start(start)
+                            .end(end)
+                            .build()
+            );
+        }
+
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/leverage")

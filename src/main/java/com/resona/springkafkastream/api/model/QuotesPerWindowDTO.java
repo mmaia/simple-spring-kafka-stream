@@ -4,14 +4,15 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 
 @Data
 @Builder
-public class StockQuoteDTO {
+public class QuotesPerWindowDTO {
     private String symbol;
-    private BigDecimal tradeValue;
+    private long count;
     @JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "UTC")
-    private Instant isoDateTime;
+    private Instant start;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "UTC")
+    private Instant end;
 }

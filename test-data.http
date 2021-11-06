@@ -1,13 +1,13 @@
 POST http://localhost:8080/api/quotes
 Content-Type: application/json
 
-< ./test-data/stockQuote3.json
+< ./test-data/stockQuote2.json
 
 ###
 POST http://localhost:8080/api/leverage
 Content-Type: application/json
 
-< ./test-data/leveragePrice3.json
+< ./test-data/leveragePrice1.json
 
 ###
 GET http://localhost:8080/api/leveragePrice/APPL
@@ -16,5 +16,9 @@ GET http://localhost:8080/api/leveragePrice/APPL
 GET http://localhost:8080/api/leveragePrice/GOOGL
 
 ###
+GET http://localhost:8080/api/quotes/count/NTFLX?pastMinutes=300
+
+###
 GET http://localhost:8080/actuator/health
+
 

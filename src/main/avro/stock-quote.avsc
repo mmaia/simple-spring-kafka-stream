@@ -5,6 +5,6 @@
  "fields": [
    { "name": "symbol", "type": "string"},
    { "name": "tradeValue", "type": "double"},
-   { "name": "tradeTime", "type": ["null", "string"], "default": null}
+   { "name": "tradeTime", "type": ["null", "long"], "default": null}
  ]
 }
