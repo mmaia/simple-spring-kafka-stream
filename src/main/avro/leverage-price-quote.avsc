@@ -4,6 +4,6 @@
  "name": "LeveragePrice",
  "fields": [
    { "name": "symbol", "type": "string"},
-   { "name": "leveragePrice", "type": "double"}
+   { "name": "leverage", "type": "double"}
  ]
 }

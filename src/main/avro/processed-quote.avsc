@@ -6,6 +6,6 @@
     { "name": "symbol", "type": "string"},
     { "name": "tradeValue", "type": "double"},
     { "name": "tradeTime", "type": ["null", "long"], "default": null},
-    { "name": "leveragePrice", "type": ["null", "double"], "default":  null}
+    { "name": "leverage", "type": ["null", "double"], "default":  null}
   ]
 }

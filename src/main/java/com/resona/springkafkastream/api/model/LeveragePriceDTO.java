@@ -7,5 +7,5 @@ import java.math.BigDecimal;
 @Data
 public class LeveragePriceDTO {
     private String symbol;
-    private BigDecimal leveragePrice;
+    private BigDecimal leverage;
 }

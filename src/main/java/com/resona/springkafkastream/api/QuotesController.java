@@ -31,7 +31,7 @@ public class QuotesController {
         if(leveragePrice == null) return ResponseEntity.noContent().build();
         LeveragePriceDTO result = new LeveragePriceDTO();
         result.setSymbol(leveragePrice.getSymbol().toString());
-        result.setLeveragePrice(BigDecimal.valueOf(leveragePrice.getLeveragePrice()));
+        result.setLeverage(BigDecimal.valueOf(leveragePrice.getLeveragePrice()));
         return ResponseEntity.ok(result);
     }
 
@@ -78,7 +78,7 @@ public class QuotesController {
         log.info("stockQuote: {}", leveragePriceDTO.toString());
         LeveragePrice leveragePrice = LeveragePrice.newBuilder()
                 .setSymbol(leveragePriceDTO.getSymbol())
-                .setLeveragePrice(leveragePriceDTO.getLeveragePrice().doubleValue())
+                .setLeveragePrice(leveragePriceDTO.getLeverage().doubleValue())
                 .build();
         leveragePriceProducer.send(leveragePrice);
         return ResponseEntity.ok(leveragePriceDTO);
