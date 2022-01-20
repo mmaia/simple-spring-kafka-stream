@@ -1,4 +1,4 @@
-package com.resona.springkafkastream.repository;
+package com.maia.springkafkastream.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;

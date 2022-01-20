@@ -1,9 +1,9 @@
-package com.resona.springkafkastream.api;
+package com.maia.springkafkastream.api;
 
-import com.resona.springkafkastream.api.model.LeveragePriceDTO;
-import com.resona.springkafkastream.api.model.QuotesPerWindowDTO;
-import com.resona.springkafkastream.api.model.StockQuoteDTO;
-import com.resona.springkafkastream.repository.*;
+import com.maia.springkafkastream.api.model.LeveragePriceDTO;
+import com.maia.springkafkastream.api.model.QuotesPerWindowDTO;
+import com.maia.springkafkastream.api.model.StockQuoteDTO;
+import com.maia.springkafkastream.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +31,7 @@ public class QuotesController {
         if(leveragePrice == null) return ResponseEntity.noContent().build();
         LeveragePriceDTO result = new LeveragePriceDTO();
         result.setSymbol(leveragePrice.getSymbol().toString());
-        result.setLeverage(BigDecimal.valueOf(leveragePrice.getLeveragePrice()));
+        result.setLeverage(BigDecimal.valueOf(leveragePrice.getLeverage()));
         return ResponseEntity.ok(result);
     }
 
@@ -78,7 +78,7 @@ public class QuotesController {
         log.info("stockQuote: {}", leveragePriceDTO.toString());
         LeveragePrice leveragePrice = LeveragePrice.newBuilder()
                 .setSymbol(leveragePriceDTO.getSymbol())
-                .setLeveragePrice(leveragePriceDTO.getLeverage().doubleValue())
+                .setLeverage(leveragePriceDTO.getLeverage().doubleValue())
                 .build();
         leveragePriceProducer.send(leveragePrice);
         return ResponseEntity.ok(leveragePriceDTO);

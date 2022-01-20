@@ -1,5 +1,5 @@
 {
-  "namespace": "com.resona.springkafkastream.repository",
+  "namespace": "com.maia.springkafkastream.repository",
   "type": "record",
   "name": "ProcessedQuote",
   "fields": [

@@ -1,4 +1,4 @@
-package com.resona.springkafkastream.api.model;
+package com.maia.springkafkastream.api.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;

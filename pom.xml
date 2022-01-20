@@ -8,7 +8,7 @@
 		<version>2.5.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.resona.springkafkastream</groupId>
+	<groupId>com.maia.springkafkastream</groupId>
 	<artifactId>simple-spring-kafka-stream</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>simple-spring-kafka-stream</name>

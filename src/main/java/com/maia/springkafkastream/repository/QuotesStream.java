@@ -1,4 +1,4 @@
-package com.resona.springkafkastream.repository;
+package com.maia.springkafkastream.repository;
 
 
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
@@ -100,7 +100,7 @@ public class QuotesStream {
                         (symbol, processedQuote) -> symbol,
                         (processedQuote, leveragePrice) -> {
                             if (leveragePrice == null) return processedQuote;
-                            processedQuote.setLeveragePrice(leveragePrice.getLeveragePrice());
+                            processedQuote.setLeverage(leveragePrice.getLeverage());
                             return processedQuote;
                         });
 

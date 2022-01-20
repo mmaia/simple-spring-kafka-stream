@@ -1,4 +1,4 @@
-package com.resona.springkafkastream.repository;
+package com.maia.springkafkastream.repository;
 
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
