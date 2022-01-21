@@ -42,4 +42,13 @@ If you need a bit more context on how to run the local setup using kubernetes, y
 
 # Run it - The application
 
+1. Build the application: `mvn clean package`
+2. Run it: `mvn spring-boot:run`
 
+## Calling endpoints
+
+Some sample calls are provided in the `test-data.http` file. You can run those from IntelliJ directly or if you're using
+VSCode you can run them after installing the `http` extension (REST Client). You can also convert those simple callst to
+curl or httpie commands if that's your preference.
+
+If you want to send multiple messages I recommend that you also check [Apache ab tool](https://httpd.apache.org/docs/2.4/programs/ab.html). 
