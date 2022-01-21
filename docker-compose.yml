@@ -5,7 +5,7 @@ services:
   # https://hub.docker.com/r/confluentinc/cp-kafka/
   kafka:
     container_name: kafka
-    image: confluentinc/cp-kafka:6.2.1
+    image: confluentinc/cp-kafka:7.0.1
     hostname: kafka
     ports:
       - 9092:9092
@@ -31,7 +31,7 @@ services:
   # Confluent Schema Registry Docker image see: https://hub.docker.com/r/confluentinc/cp-schema-registry
   # Schema Registry: http://localhost:8081
   schema-registry:
-    image: confluentinc/cp-schema-registry:6.2.1
+    image: confluentinc/cp-schema-registry:7.0.1
     container_name: schema-registry
     hostname: schema-registry
     restart: always
@@ -46,7 +46,7 @@ services:
 
   # https://hub.docker.com/r/confluentinc/cp-zookeeper/
   zookeeper:
-    image: confluentinc/cp-zookeeper:6.2.1
+    image: confluentinc/cp-zookeeper:7.0.1
     container_name: zookeeper
     hostname: zookeeper
     ports:
