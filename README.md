@@ -1,4 +1,4 @@
-This file contains step by step instructions on how to run this playground project.
+This file contains step-by-step instructions on how to run this playground project.
 
 
 ## Pre requisites
