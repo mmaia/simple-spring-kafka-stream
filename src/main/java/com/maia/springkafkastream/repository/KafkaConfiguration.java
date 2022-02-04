@@ -72,7 +72,7 @@ public class KafkaConfiguration {
     }
 
     // TOPICS
-    public final static String QUOTES_TOPIC = "stock-quotes-topistock-quotes-topic";
+    public final static String QUOTES_TOPIC = "stock-quotes-topic";
     public final static String LEVERAGE_PRICE_TOPIC = "leverage-prices-topic";
     public final static String APPL_STOCKS_TOPIC = "appl-stocks-topic";
     public final static String GOOGL_STOCKS_TOPIC = "googl-stocks-topic";

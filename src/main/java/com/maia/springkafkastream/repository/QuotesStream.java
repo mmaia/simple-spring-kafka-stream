@@ -111,8 +111,6 @@ public class QuotesStream {
                 .defaultBranch(ks -> ks.to(KafkaConfiguration.ALL_OTHER_STOCKS_TOPIC))
                 .onTopOf(inStream);
 
-
-
         // we can then group by symbol
         final KGroupedStream<String, ProcessedQuote> groupedBySymbol = inStream.groupByKey();
 
@@ -127,20 +125,17 @@ public class QuotesStream {
         // and send the values to a topic which could be a compacted topic from where we always get the latest total count per symbol.
         quotesCount.toStream().to(KafkaConfiguration.COUNT_TOTAL_QUOTES_BY_SYMBOL_TOPIC, Produced.with(Serdes.String(), Serdes.Long()));
 
+        // we could transform it materialize it to be able to query directly from kafka
+        final KTable<Windowed<String>, Long> quotesWindowed = groupedBySymbol
+                .windowedBy(TimeWindows.of(Duration.ofSeconds(30)))
+                .count(Materialized.<String, Long, WindowStore<Bytes, byte[]>>as(QUOTES_PER_WINDOW_TABLE)
+                        .withValueSerde(Serdes.Long()));
 
-        // we can also group all time counts per stock per windowed interval
-        final KTable<Windowed<String>, Long> quotesWindowed = groupedBySymbol.windowedBy(SessionWindows.with(Duration.ofSeconds(30))).count();
         // and then transform and send it to a new topic which we could then use a connector and send to elastic for example...
         quotesWindowed
                 .toStream()
                 .map(processedQuoteToQuotesPerWindowMapper::apply)
                 .to(KafkaConfiguration.COUNT_WINDOW_QUOTES_BY_SYMBOL_TOPIC, Produced.with(Serdes.String(), quotesPerWindowSerde));
-
-        // we could transform it materialize it to be able to query directly from kafka
-        groupedBySymbol
-                .windowedBy(TimeWindows.of(Duration.ofSeconds(30)))
-                .count(Materialized.<String, Long, WindowStore<Bytes, byte[]>>as(QUOTES_PER_WINDOW_TABLE)
-                        .withValueSerde(Serdes.Long()));
 
         return inStream;
     }
