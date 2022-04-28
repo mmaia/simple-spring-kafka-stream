@@ -1,6 +1,8 @@
 package com.maia.springkafkastream.repository;
 
 
+import io.confluent.kafka.schemaregistry.client.SchemaRegistryClientConfig;
+import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.common.serialization.Serdes;
@@ -19,8 +21,12 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.PostConstruct;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
+
+import static com.maia.springkafkastream.repository.KafkaConfiguration.SCHEMA_REGISTRY_URL;
 
 @Repository
 @RequiredArgsConstructor
@@ -61,8 +67,13 @@ public class QuotesStream {
 
     @PostConstruct
     public void init() {
-        leveragePriceSerde.configure(KafkaConfiguration.SERDE_CONFIG, false);
-        quotesPerWindowSerde.configure(KafkaConfiguration.SERDE_CONFIG, false);
+        Map<String, String> config = new HashMap<>();
+        config.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG,
+                SCHEMA_REGISTRY_URL);
+        config.put(SchemaRegistryClientConfig.BASIC_AUTH_CREDENTIALS_SOURCE, "USER_INFO");
+        config.put(SchemaRegistryClientConfig.USER_INFO_CONFIG, "user:password");
+        leveragePriceSerde.configure(config, false);
+        quotesPerWindowSerde.configure(config, false);
     }
 
     @Bean

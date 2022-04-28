@@ -7,6 +7,9 @@ spring:
       value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
       properties:
         schema.registry.url: http://schema-registry:8081
+        basic.auth:
+          credentials.source: "USER_INFO"
+          user.info: "user:password"
     consumer:
       bootstrap-servers: kafka:9092
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -14,5 +17,8 @@ spring:
       properties:
         schema.registry.url: http://schema-registry:8081
         specific.avro.reader: true
+        basic.auth:
+          credentials.source: "USER_INFO"
+          user.info: "user:password"
 
 management.endpoints.enabled-by-default: true

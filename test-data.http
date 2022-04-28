@@ -7,7 +7,7 @@ Content-Type: application/json
 POST http://localhost:8080/api/leverage
 Content-Type: application/json
 
-< ./test-data/leveragePrice1.json
+< ./test-data/leveragePrice2.json
 
 ###
 GET http://localhost:8080/api/leveragePrice/APPL

@@ -39,10 +39,18 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "kafka:29092"
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_LISTENERS: "http://0.0.0.0:8081"
+      SCHEMA_REGISTRY_KAFKASTORE_SECURITY_PROTOCOL: PLAINTEXT
+      SCHEMA_REGISTRY_AUTHENTICATION_METHOD: BASIC
+      SCHEMA_REGISTRY_AUTHENTICATION_ROLES: "admin,developer,user"
+      SCHEMA_REGISTRY_AUTHENTICATION_REALM: "SchemaRegistryConfig"
+      SCHEMA_REGISTRY_OPTS: "-Djava.security.auth.login.config=/tmp/jaas.conf"
     ports:
       - 8081:8081
     depends_on:
       - zookeeper
+    volumes:
+      - ${PWD}/schema-reg-config/jaas.conf:/tmp/jaas.conf
+      - ${PWD}/schema-reg-config/password-file:/tmp/password-file
 
   # https://hub.docker.com/r/confluentinc/cp-zookeeper/
   zookeeper:
